@@ -6,6 +6,7 @@ import { CONTRACT_ADDRESS, transformCharacterData } from "./constants.js";
 import finalFantasy from "./utils/FinalFantasy.json";
 
 import SelectCharacter from "./Components/SelectCharacter/SelectCharacter";
+import Arena from "./Components/Arena/Arena";
 
 import "./App.css";
 
@@ -127,7 +128,9 @@ const App = () => {
           {account && !character && (
             <SelectCharacter setCharacter={setCharacter} />
           )}
-          {/* {account && character && <SelectCharacter />} */}
+          {account && character && (
+            <Arena characterNFT={character} setCharacter={setCharacter} />
+          )}
         </div>
         <div className="footer-container">
           <img alt="Twitter Logo" className="twitter-logo" src={twitterLogo} />
