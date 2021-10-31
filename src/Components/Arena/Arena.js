@@ -58,14 +58,34 @@ const Arena = ({ characterNFT, setCharacter }) => {
       });
     };
 
+    const onSpellComplete = (newBossHp, newPlayerHp) => {
+      const bossHp = newBossHp.toNumber();
+      const playerHp = newPlayerHp.toNumber();
+
+      console.log(`SpellComplete: Boss Hp: ${bossHp} Player Hp: ${playerHp}`);
+
+      /*
+       * Update both player and boss Hp
+       */
+      setBoss((prevState) => {
+        return { ...prevState, hp: bossHp };
+      });
+
+      setCharacter((prevState) => {
+        return { ...prevState, hp: playerHp };
+      });
+    };
+
     if (gameContract) {
       fetchBoss();
       gameContract.on("AttackCompleted", onAttackComplete);
+      gameContract.on("SpellCompleted", onSpellComplete);
     }
 
     return () => {
       if (gameContract) {
         gameContract.off("AttackCompleted", onAttackComplete);
+        gameContract.off("SpellCompleted", onSpellComplete);
       }
     };
   }, [gameContract, setCharacter]);
@@ -98,7 +118,7 @@ const Arena = ({ characterNFT, setCharacter }) => {
       }
     } catch (error) {
       console.error("Error attacking boss:", error);
-      setAttackState("miss");
+      setSpellState("miss");
     }
   };
 
@@ -106,7 +126,7 @@ const Arena = ({ characterNFT, setCharacter }) => {
     <div className="arena-container">
       {boss && (
         <div className="boss-container">
-          <div className={`boss-content ${attackState}`}>
+          <div className={`boss-content ${attackState} ${spellState}`}>
             <h2>{boss.name}</h2>
             <div className="image-content">
               <img
